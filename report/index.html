@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E10YHPJ1VJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "G-E10YHPJ1VJ");
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BigInteger · FastBigIntStruct 성능 분석</title>
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+        .github-fork-ribbon.fixed:before {
+            background-color: #090;
+        }
+    </style>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
+</head>
+
+<body>
+    <a target="_blank" class="github-fork-ribbon fixed" href="https://github.com/bluetsys/dotnet-numerics-performance"
+        data-ribbon="Fork me on GitHub" title="Fork me on GitHub">Fork me on GitHub</a>
+    <header id="report-header">
+        <div class="eyebrow">NUMERICS / PERFORMANCE ANALYSIS</div>
+        <h1>BigInteger &amp; FastBigIntStruct</h1>
+        <p class="intro muted">
+            자릿수에 따른 비용 증가, .NET 버전에 따른 변화, 두 구현체의 속도와 메모리 할당량을
+            같은 데이터에서 비교합니다. 모든 시간은 연산당 값이며, 서로 다른 조건의 시간을
+            합산하지 않습니다.
+        </p>
+        <nav aria-label="리포트 섹션">
+            <a href="#digits">자릿수별</a><a href="#versions">버전별</a><a href="#implementations">구현체별</a><a
+                href="#heatmap">승패 행렬</a><a href="#baseline">기준 버전 대비</a><a href="#growth">입력 증가 비용</a><a
+                href="#ranking">조건별 순위</a><a href="#explorer">전체 데이터</a>
+            <a href="#environment">테스트 환경</a>
+        </nav>
+        <div class="toolbar">
+            <label for="metric">비교 지표<select id="metric">
+                    <option value="ns_op">연산 시간 · ns/op</option>
+                    <option value="bytes_op">관리 힙 할당량 · B/op</option>
+                </select></label>
+            <label for="operation">연산<select id="operation">
+                    <option value="all">덧셈 + 곱셈</option>
+                    <option value="+">덧셈 (+)</option>
+                    <option value="*">곱셈 (*)</option>
+                </select></label>
+            <label for="scale">차트 축<select id="scale">
+                    <option value="linear">선형</option>
+                    <option value="log">로그 · log(1 + 값)</option>
+                </select></label>
+            <label for="baseline-select">기준 .NET 버전<select id="baseline-select"></select></label>
+            <button id="print" type="button">인쇄 / PDF 저장</button>
+        </div>
+        <p class="muted compact">
+            상단 설정은 모든 비교 섹션에 적용됩니다. 지표는 낮을수록 좋습니다. 로그 축을
+            선택해도 숫자 표시는 원래 값입니다.
+        </p>
+    </header>
+    <div class="overview">
+        <div class="legend">
+            <span><i class="swatch swatch-fast"></i>FastBigIntStruct</span><span><i
+                    class="swatch swatch-net"></i>BigInteger</span>
+        </div>
+        <div id="stats" class="stats" aria-live="polite"></div>
+        <div class="panel">
+            <h3>현재 지표로 보는 주요 결과</h3>
+            <ul id="takeaways" class="takeaways"></ul>
+        </div>
+    </div>
+    <main>
+        <noscript>
+            <p>
+                이 리포트는 JavaScript가 필요합니다. 원본 수치는
+                <a href="measurements.csv">CSV</a>에서 확인할 수 있습니다.
+            </p>
+        </noscript>
+        <div id="data-error" class="note" role="alert">
+            측정 데이터를 불러오지 못했습니다. main 폴더에서 <code>node report.js</code>를
+            실행하고, report.html과 같은 폴더에 measurements.js가 있는지 확인하세요.
+        </div>
+        <section id="digits" class="section">
+            <div class="sectionhead">
+                <span class="number">01 / DIGIT COUNT</span>
+                <h2>자릿수별 비교</h2>
+                <p class="muted">
+                    같은 자릿수와 연산을 고정하고 모든 버전의 두 구현체를 비교합니다. 각 패널은
+                    공통 축을 사용합니다.
+                </p>
+            </div>
+            <div id="digits-charts" class="grid"></div>
+        </section>
+        <section id="versions" class="section">
+            <div class="sectionhead">
+                <span class="number">02 / RUNTIME VERSION</span>
+                <h2>.NET 버전별 비교</h2>
+                <p class="muted">
+                    버전 하나 안에서 작은 수부터 큰 수까지 비용이 어떻게 달라지는지 확인합니다.
+                    차트 축은 각 패널 안에서 공유합니다.
+                </p>
+            </div>
+            <div id="version-charts" class="grid"></div>
+        </section>
+        <section id="implementations" class="section">
+            <div class="sectionhead">
+                <span class="number">03 / IMPLEMENTATION</span>
+                <h2>BigInteger · FastBigIntStruct 각각 보기</h2>
+                <p class="muted">
+                    구현체를 고정하고 버전별 추이를 봅니다. 선 하나가 같은 자릿수의 측정값이며,
+                    아래 표에서 정확한 값을 볼 수 있습니다.
+                </p>
+            </div>
+            <div id="implementation-charts" class="grid two"></div>
+        </section>
+        <section id="heatmap" class="section">
+            <div class="sectionhead">
+                <span class="number">04 / HEAD TO HEAD</span>
+                <h2>구현체 간 비교 행렬</h2>
+                <p class="muted" id="heat-caption"></p>
+            </div>
+            <div id="heat-tables" class="grid two"></div>
+        </section>
+        <section id="baseline" class="section">
+            <div class="sectionhead">
+                <span class="number">05 / BASELINE</span>
+                <h2>기준 .NET 버전 대비 변화</h2>
+                <p class="muted" id="baseline-caption"></p>
+            </div>
+            <div id="baseline-tables" class="grid two"></div>
+        </section>
+        <section id="growth" class="section">
+            <div class="sectionhead">
+                <span class="number">06 / INPUT GROWTH</span>
+                <h2>자릿수가 늘 때 비용 증가</h2>
+                <p class="muted">
+                    같은 런타임·구현체·연산에서 큰 입력의 값 ÷ 작은 입력의 값입니다. 큰 입력에서
+                    연산 하나가 얼마나 더 비싸지는지 보여주며, 계산 복잡도의 증명은 아닙니다.
+                </p>
+            </div>
+            <div id="growth-tables" class="grid two"></div>
+        </section>
+        <section id="ranking" class="section">
+            <div class="sectionhead">
+                <span class="number">07 / RANKING</span>
+                <h2>같은 조건에서 가장 좋은 조합</h2>
+                <p class="muted">
+                    자릿수·연산마다 모든 버전과 구현체를 함께 정렬한 상위 3개입니다. 같은 값은
+                    공동 순위입니다. 작은 차이의 통계적 유의성은 이 로그로 판단할 수 없습니다.
+                </p>
+            </div>
+            <div id="ranking-cards" class="grid"></div>
+        </section>
+        <section id="explorer" class="section">
+            <div class="sectionhead">
+                <span class="number">08 / DATA EXPLORER</span>
+                <h2>전체 데이터 탐색</h2>
+                <p class="muted">
+                    버전·자릿수·구현체로 필터링하고, 열 제목을 눌러 정렬할 수 있습니다. 상단
+                    연산 선택도 적용됩니다.
+                </p>
+            </div>
+            <div class="toolbar">
+                <label for="filter-version">버전<select id="filter-version"></select></label><label
+                    for="filter-digits">자릿수<select id="filter-digits"></select></label><label
+                    for="filter-impl">구현체<select id="filter-impl">
+                        <option value="all">전체</option>
+                        <option value="Fast">FastBigIntStruct</option>
+                        <option value=".NET">BigInteger</option>
+                    </select></label><button id="reset-filters" type="button">표 필터 초기화</button><span id="explorer-count"
+                    aria-live="polite"></span>
+            </div>
+            <div class="tablewrap">
+                <table id="raw-table">
+                    <thead>
+                        <tr>
+                            <th><button class="sort" data-sort="framework">버전 ↕</button></th>
+                            <th><button class="sort" data-sort="digits">자릿수 ↕</button></th>
+                            <th>
+                                <button class="sort" data-sort="implementation">
+                                    구현체 ↕
+                                </button>
+                            </th>
+                            <th><button class="sort" data-sort="operation">연산 ↕</button></th>
+                            <th><button class="sort" data-sort="ns_op">ns/op ↕</button></th>
+                            <th><button class="sort" data-sort="bytes_op">B/op ↕</button></th>
+                            <th>
+                                <button class="sort" data-sort="throughput">
+                                    백만 연산/초 ↕
+                                </button>
+                            </th>
+                            <th><button class="sort" data-sort="samples">회/표본 ↕</button></th>
+                        </tr>
+                    </thead>
+                    <tbody id="raw-body"></tbody>
+                </table>
+            </div>
+            <p class="muted compact">
+                처리량은 1,000 ÷ ns/op로 환산한 이론적 단일 연산 처리량(Mop/s)입니다. 병렬 실행
+                또는 애플리케이션 처리량을 따로 측정한 값이 아닙니다.
+            </p>
+            <div class="downloads">
+                <a href="measurements.csv">원본 측정값 CSV</a><a href="implementation-comparison.csv">구현체 비교 CSV</a><a
+                    href="version-comparison.csv">버전 비교 CSV (최초 버전 기준)</a>
+            </div>
+        </section>
+        <section class="section" id="environment">
+            <div class="sectionhead">
+                <span class="number">09 / TEST ENVIRONMENT</span>
+                <h2>테스트 환경</h2>
+                <p class="muted">벤치마크 시작 시 수집한 CPU·메모리·OS·실행 설정입니다.</p>
+            </div>
+            <div id="test-environment" class="panel"></div>
+        </section>
+        <section class="section" id="methodology">
+            <div class="sectionhead">
+                <span class="number">10 / METHODOLOGY</span>
+                <h2>실행 환경과 해석 범위</h2>
+            </div>
+            <div class="panel">
+                <ul>
+                    <li>
+                        Release 빌드의 고정 피연산자 덧셈·곱셈 벤치마크입니다. 파싱·문자열
+                        변환은 측정에서 제외했습니다.
+                    </li>
+                    <li>
+                        벤치마크 소스는 각 항목에서 최소 250ms 워밍업 후 7개 표본을 측정하고
+                        시간의 중앙값을 출력합니다. 원시 표본은 저장되지 않아 신뢰구간을
+                        계산하지 않았습니다.
+                    </li>
+                    <li>
+                        B/op는 연산당 관리 힙 할당량이며, 스택 사용량·최대 메모리·전체 프로세스
+                        메모리 사용량은 아닙니다.
+                    </li>
+                    <li>
+                        0으로 나눠야 하는 비율은 ‘—’로 표시합니다. 실제 값과 할당량 차이는
+                        그대로 표시합니다. 승패는 반올림 전 입력값으로 판정합니다.
+                    </li>
+                    <li>
+                        Fast 구현의 범위는 음이 아닌 정수의 덧셈·곱셈입니다. BigInteger의 모든
+                        기능에 대한 비교가 아닙니다.
+                    </li>
+                    <li>
+                        CPU·전원 설정·실행 순서의 영향은 분리 측정되지 않았습니다. 버전 간
+                        차이는 이번 실행에서의 관측값이며, RC 런타임은 정식 버전과 다를 수
+                        있습니다.
+                    </li>
+                </ul>
+            </div>
+            <div id="inputs" class="tablewrap inputs-table"></div>
+        </section>
+        <footer id="footer"></footer>
+    </main>
+    <script src="./measurements.js"></script>
+    <script src="./app.js"></script>
+    <script type="text/javascript">
+        var sc_project = 13139524;
+        var sc_invisible = 1;
+        var sc_security = "83232f9f";
+    </script>
+    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+    <noscript>
+        <div class="statcounter">
+            <a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13139524/0/83232f9f/1/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade" /></a>
+        </div>
+    </noscript>
+    <!-- End of Statcounter Code -->
+</body>
+
+</html>

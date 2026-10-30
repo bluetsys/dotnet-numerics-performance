@@ -1,0 +1,22 @@
+﻿Environment ID: 70cddd62-eddb-4f13-a2f5-b5b799b6d45e
+Correctness: 1,173 pairs + default zero passed.
+Runtime: .NET 10.0.14
+Iterations: 1,000,000; median of 7; parsing/formatting excluded
+
+50 decimal digits (1,000,000 operations/sample)
+Fast +         6.13 ns/op     56.0 B/op
+.NET +        17.10 ns/op     48.0 B/op
+Fast *        15.03 ns/op     72.0 B/op
+.NET *        35.30 ns/op     72.0 B/op
+
+200 decimal digits (250,000 operations/sample)
+Fast +        13.82 ns/op    120.0 B/op
+.NET +        27.18 ns/op    112.0 B/op
+Fast *       105.32 ns/op    200.0 B/op
+.NET *       246.96 ns/op    192.0 B/op
+
+1000 decimal digits (50,000 operations/sample)
+Fast +        54.94 ns/op    448.0 B/op
+.NET +        98.00 ns/op    440.0 B/op
+Fast *      1689.55 ns/op    856.0 B/op
+.NET *      3814.58 ns/op    856.0 B/op

@@ -1,0 +1,125 @@
+﻿{
+    "schema_version":  1,
+    "run_id":  "70cddd62-eddb-4f13-a2f5-b5b799b6d45e",
+    "started_at":  "2026-10-30T11:26:07.1232544+09:00",
+    "finished_at":  "2026-10-30T11:26:48.1283452+09:00",
+    "timezone":  "Korea Standard Time",
+    "os":  {
+               "name":  "Microsoft Windows 11 Pro",
+               "version":  "10.0.26300",
+               "build":  "26300",
+               "architecture":  "64비트"
+           },
+    "hardware":  {
+                     "manufacturer":  "Micro-Star International Co., Ltd.",
+                     "model":  "MS-7D27"
+                 },
+    "cpu":  [
+                {
+                    "name":  "13th Gen Intel(R) Core(TM) i9-13900K",
+                    "physical_cores":  24,
+                    "logical_processors":  32,
+                    "max_clock_mhz":  3000
+                }
+            ],
+    "memory":  {
+                   "total_bytes":  137040097280,
+                   "available_bytes_at_start":  109707403264,
+                   "modules":  [
+                                   {
+                                       "capacity_bytes":  34359738368,
+                                       "speed_mhz":  4000,
+                                       "configured_speed_mhz":  4000
+                                   },
+                                   {
+                                       "capacity_bytes":  34359738368,
+                                       "speed_mhz":  4000,
+                                       "configured_speed_mhz":  4000
+                                   },
+                                   {
+                                       "capacity_bytes":  34359738368,
+                                       "speed_mhz":  4000,
+                                       "configured_speed_mhz":  4000
+                                   },
+                                   {
+                                       "capacity_bytes":  34359738368,
+                                       "speed_mhz":  4000,
+                                       "configured_speed_mhz":  4000
+                                   }
+                               ]
+               },
+    "power_plan":  null,
+    "dotnet":  {
+                   "sdk_version":  "11.0.100-rc.3.26522.148",
+                   "installed_runtimes":  [
+                                              "Microsoft.AspNetCore.All 2.1.30",
+                                              "Microsoft.AspNetCore.App 2.1.30",
+                                              "Microsoft.AspNetCore.App 3.1.32",
+                                              "Microsoft.AspNetCore.App 5.0.17",
+                                              "Microsoft.AspNetCore.App 6.0.36",
+                                              "Microsoft.AspNetCore.App 7.0.20",
+                                              "Microsoft.AspNetCore.App 8.0.32",
+                                              "Microsoft.AspNetCore.App 8.0.33",
+                                              "Microsoft.AspNetCore.App 9.0.21",
+                                              "Microsoft.AspNetCore.App 9.0.22",
+                                              "Microsoft.AspNetCore.App 10.0.13",
+                                              "Microsoft.AspNetCore.App 10.0.14",
+                                              "Microsoft.AspNetCore.App 11.0.0-rc.3.26522.148",
+                                              "Microsoft.NETCore.App 2.1.30",
+                                              "Microsoft.NETCore.App 3.1.32",
+                                              "Microsoft.NETCore.App 5.0.17",
+                                              "Microsoft.NETCore.App 6.0.36",
+                                              "Microsoft.NETCore.App 7.0.20",
+                                              "Microsoft.NETCore.App 8.0.32",
+                                              "Microsoft.NETCore.App 8.0.33",
+                                              "Microsoft.NETCore.App 9.0.3",
+                                              "Microsoft.NETCore.App 9.0.21",
+                                              "Microsoft.NETCore.App 9.0.22",
+                                              "Microsoft.NETCore.App 10.0.13",
+                                              "Microsoft.NETCore.App 10.0.14",
+                                              "Microsoft.NETCore.App 11.0.0-rc.3.26522.148",
+                                              "Microsoft.WindowsDesktop.App 3.1.32",
+                                              "Microsoft.WindowsDesktop.App 5.0.17",
+                                              "Microsoft.WindowsDesktop.App 6.0.36",
+                                              "Microsoft.WindowsDesktop.App 7.0.20",
+                                              "Microsoft.WindowsDesktop.App 8.0.32",
+                                              "Microsoft.WindowsDesktop.App 8.0.33",
+                                              "Microsoft.WindowsDesktop.App 9.0.3",
+                                              "Microsoft.WindowsDesktop.App 9.0.21",
+                                              "Microsoft.WindowsDesktop.App 9.0.22",
+                                              "Microsoft.WindowsDesktop.App 10.0.13",
+                                              "Microsoft.WindowsDesktop.App 10.0.14",
+                                              "Microsoft.WindowsDesktop.App 11.0.0-rc.3.26522.148"
+                                          ],
+                   "environment_variables":  {
+
+                                             }
+               },
+    "runner":  {
+                   "powershell_version":  "5.1.26100.9711"
+               },
+    "benchmark":  {
+                      "configuration":  "Release",
+                      "compilation":  "JIT (PublishAot=false)",
+                      "iterations":  1000000,
+                      "frameworks":  [
+                                         "net6.0",
+                                         "net7.0",
+                                         "net8.0",
+                                         "net9.0",
+                                         "net10.0",
+                                         "net11.0"
+                                     ]
+                  },
+    "result_files":  {
+                         "net6.0.txt":  "F28844EF5F081A018F76270D59CA0DD4783673262D4283774ECC93E2F0A98C7B",
+                         "net7.0.txt":  "A2D112108F0F323A3C9C8D5ECC048A9127880E3C5DB1A8A71FC813D136ED1B4A",
+                         "net8.0.txt":  "9B0E5DCE364255466DC52EAEB79D474994720CEBA94D5D3466D395615603F232",
+                         "net9.0.txt":  "B5DD2898CCBF083CA9398D0A5B8FD191FD5D1EF2B74BEFFCAE758C98EFF8E0F2",
+                         "net10.0.txt":  "6996D1F650EF41C0B6D32A05083E697FAD832B8A94856D50981F32D0957862EA",
+                         "net11.0.txt":  "06091233F079EF66DBFA8E072985F5095BE20F89DCF823E0D1D44B2D7FB0471D"
+                     },
+    "collection_warnings":  [
+                                "Could not collect Win32_PowerPlan."
+                            ]
+}
