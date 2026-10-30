@@ -17,7 +17,7 @@
 node .\report.js
 
 # 브라우저에서 리포트 열기
-Start-Process .\report\index.html
+Start-Process .\docs\index.html
 ```
 
 `run.ps1`은 빌드를 수행하지 않습니다. C# 코드를 수정했다면 먼저 `build.ps1`을 실행해야 합니다. 측정 결과와 리포트 데이터는 각각 다시 실행할 때 덮어씁니다.
@@ -54,7 +54,7 @@ node --version
 │   ├── net6.0.txt                      # 런타임별 측정 로그
 │   ├── ...
 │   └── net11.0.txt
-├── report/
+├── docs/
 │   ├── index.html                     # 고정된 리포트 화면
 │   ├── style.css                      # 화면 스타일
 │   ├── app.js                         # 차트, 필터, 정렬
@@ -130,7 +130,7 @@ dotnet run --project .\src\main.csproj -c Release -f net10.0 -- --validate-only
 
 ```powershell
 node .\report.js
-Start-Process .\report\index.html
+Start-Process .\docs\index.html
 ```
 
 데이터 흐름은 다음과 같습니다.
@@ -138,13 +138,13 @@ Start-Process .\report\index.html
 ```text
 results/net*.txt
     → report.js
-    → report/measurements.js + CSV
+    → docs/measurements.js + CSV
     → index.html에서 app.js가 읽어 화면 표시
 ```
 
-`report.js`는 HTML을 생성하거나 수정하지 않습니다. 화면을 바꾸려면 `report/index.html`, `report/style.css`, `report/app.js`를 수정합니다. `measurements.js`와 CSV는 자동 생성 파일입니다.
+`report.js`는 HTML을 생성하거나 수정하지 않습니다. 화면을 바꾸려면 `docs/index.html`, `docs/style.css`, `docs/app.js`를 수정합니다. `measurements.js`와 CSV는 자동 생성 파일입니다.
 
-다른 폴더의 측정 로그를 분석할 수도 있습니다. 출력 위치는 계속 `report/`입니다.
+다른 폴더의 측정 로그를 분석할 수도 있습니다. 출력 위치는 계속 `docs/`입니다.
 
 ```powershell
 node .\report.js --results C:\benchmarks\results
@@ -197,7 +197,7 @@ node .\report.js --help
 - **`NETSDK1207` AOT 오류:** 현재 벤치마크는 일반 JIT 실행용이며 프로젝트의 `PublishAot`는 `false`입니다.
 - **측정 결과가 느린 경우:** `Release` 설정인지 확인합니다. 별도 명령으로 Debug 빌드를 측정한 결과와 비교하지 않습니다.
 - **리포트가 이전 결과를 표시하는 경우:** `node .\report.js`를 다시 실행하고 브라우저를 새로고침합니다.
-- **측정 데이터를 불러오지 못하는 경우:** `index.html`, `style.css`, `app.js`, `measurements.js`가 모두 `report/`에 있는지 확인합니다.
+- **측정 데이터를 불러오지 못하는 경우:** `index.html`, `style.css`, `app.js`, `measurements.js`가 모두 `docs/`에 있는지 확인합니다.
 
 ## 라이선스
 

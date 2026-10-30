@@ -1,13 +1,13 @@
 'use strict';
 
 // node report.js [--results PATH]
-// Generates data and CSV only. report/report.html is a static viewer.
+// Generates data and CSV only. docs/index.html is a static viewer.
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const IMPLEMENTATIONS = ['Fast', '.NET'];
 const OPERATIONS = ['+', '*'];
-const OUTPUT = path.join(__dirname, 'report');
+const OUTPUT = path.join(__dirname, 'docs');
 
 function parse(file) {
     const text = fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
@@ -158,7 +158,7 @@ function main(args) {
     let resultsDirectory = path.join(__dirname, 'results');
     for (let i = 0; i < args.length; i++) {
         if (args[i] === '--help' || args[i] === '-h') {
-            console.log('Usage: node report.js [--results PATH]\nWrites measurements.js and CSV files to report/. Does not generate HTML.');
+            console.log('Usage: node report.js [--results PATH]\nWrites measurements.js and CSV files to docs/. Does not generate HTML.');
             return;
         }
         if (args[i] !== '--results' || !args[i + 1] || args[i + 1].startsWith('--')) {

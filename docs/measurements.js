@@ -1323,5 +1323,5 @@ window.BENCHMARK_DATA = {
       "Could not collect Win32_PowerPlan."
     ]
   },
-  "generated_at": "2026-10-30T02:28:38.263Z"
+  "generated_at": "2026-10-30T02:36:09.715Z"
 };
